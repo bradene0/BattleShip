@@ -219,13 +219,34 @@ namespace BattleshipGame
                         Console.WriteLine("Invalid coordinate format. Please enter coordinates in the format 'A1'.");
                     }
                     return;
+
+                case "COIN":
+                    Console.WriteLine("Flipping a coin...");
+                    int coinFlip = random.Next(2); // Generate a random number (0 or 1) to represent heads or tails
+                    if (coinFlip == 0)
+                    {
+                        // Player wins
+                        Console.WriteLine("It's heads! You win!");
+                        Console.WriteLine("Press Enter to continue...");
+                        Console.ReadLine();
+                    }
+                    else
+                    {
+                        // Computer wins
+                        Console.WriteLine("It's tails! Computer wins!");
+                        Console.WriteLine("Press Enter to continue...");
+                        Console.ReadLine();
+                    }
+                    return;
+
+
                 case "HELP":
                     Console.WriteLine("Welcome to Battleship!");
                     Console.WriteLine("To play the game, you will take turns with the computer to attack each other's ships on a 10x10 grid.");
                     Console.WriteLine("Your ships are hidden from the opponent, and your objective is to sink all of the opponent's ships before they sink yours.");
                     Console.WriteLine("During your turn, you can either:");
                     Console.WriteLine("- Enter coordinates to attack the opponent's grid (e.g., A1)");
-                    Console.WriteLine("- Use cheat commands such as 'REVEAL' to reveal the opponent's ships or 'NUKE' to destroy all of their ships (use with caution!)");
+                    Console.WriteLine("- Use cheat commands and turn the tides in your favor with the cheats command");
                     Console.WriteLine("The game will display the results of each attack, indicating whether you've hit or missed the opponent's ships.");
                     Console.WriteLine("Be strategic and try to outsmart the computer to win the game!");
                     Console.WriteLine("Press Enter to continue...");
@@ -235,14 +256,18 @@ namespace BattleshipGame
 
 
                 case "CHEATS":
-                    Console.WriteLine("Possible cheats:");
-                    Console.WriteLine("- REVEAL: Reveals the location of all enemy ships.");
-                    Console.WriteLine("- NUKE: Triggers a nuclear strike, destroying all enemy ships.");
-                    Console.WriteLine("- MISSILE: Activates the Hyper-Sonic-Missile cheat, allowing you to attack 3 coordinates simultaneously.");
-                    Console.WriteLine("- SABOTAGE: Allows you to enter coordinates of a suspected ship, Destroying it entirely!");
+                    Console.WriteLine("Available cheat commands:");
+                    Console.WriteLine("- HELP: Display instructions on how to play the game.");
+                    Console.WriteLine("- REVEAL: Reveal the opponent's ships.");
+                    Console.WriteLine("- NUKE: Trigger a nuclear strike (use with caution!).");
+                    Console.WriteLine("- MISSILE: Activate the Hyper-Sonic-Missile cheat to attack 3 coordinates at once.");
+                    Console.WriteLine("- SABOTAGE: Reveal the location of one of the opponent's ships.");
+                    Console.WriteLine("- COIN: Flip a coin to determine the winner.");
+                    Console.WriteLine("- SURRENDER: Surrender the game and declare the computer the winner.");
                     Console.WriteLine("Press Enter to continue...");
                     Console.ReadLine();
                     return;
+
 
                 default:
                     if (input.Length == 2 && char.IsLetter(input[0]) && char.IsDigit(input[1]))
