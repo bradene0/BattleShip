@@ -97,11 +97,16 @@ namespace BattleshipGame
                     return;
 
                 case "NUKE":
-                    Console.Clear();
-                    Console.WriteLine("Player triggered a nuclear strike! All enemy ships are destroyed!");
-                    computerBoard.Nuke(); // Destroy all enemy ships
-                    Console.WriteLine("Press Enter to continue...");
-                    Console.ReadLine();
+                    Console.WriteLine("Are you sure you want to trigger a nuclear strike? This action will destroy all enemy ships! (Y/N)");
+                    string confirm = Console.ReadLine().ToUpper();
+                    if (confirm == "Y")
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Player triggered a nuclear strike! All enemy ships are destroyed!");
+                        computerBoard.Nuke(); // Destroy all enemy ships
+                        Console.WriteLine("Press Enter to continue...");
+                        Console.ReadLine();
+                    }
                     return;
 
                 default:
@@ -120,6 +125,7 @@ namespace BattleshipGame
                     break;
             }
         }
+
 
         private void ComputerTurn()
         {
