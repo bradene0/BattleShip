@@ -104,7 +104,7 @@ namespace BattleshipGame
             }
             else
             {
-                grid[row, col] = '.'; // Mark miss on grid
+                grid[row, col] = 'm'; // Mark miss on grid
                 LastAttackResult = AttackResult.Miss;
             }
             hitGrid[row, col] = true; // Mark this cell as hit

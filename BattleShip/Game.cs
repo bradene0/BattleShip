@@ -108,6 +108,26 @@ namespace BattleshipGame
                         Console.ReadLine();
                     }
                     return;
+                case "MISSILE":
+                    // Activate Hyper-Sonic-Missile cheat
+                    Console.WriteLine("Hyper-Sonic-Missile cheat activated! Select 3 coordinates to attack on the computer's board.");
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Console.WriteLine($"Enter coordinate {i + 1}:");
+                        string missileInput = Console.ReadLine().ToUpper();
+                        if (missileInput.Length == 2 && char.IsLetter(missileInput[0]) && char.IsDigit(missileInput[1]))
+                        {
+                            int row = missileInput[0] - 'A';
+                            int col = missileInput[1] - '1';
+                            computerBoard.Attack(row, col); // Attack the computer's board
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid coordinate format. Please enter coordinates in the format 'A1'.");
+                            i--; // Retry input
+                        }
+                    }
+                    return;
 
                 default:
                     if (input.Length == 2 && char.IsLetter(input[0]) && char.IsDigit(input[1]))
