@@ -249,6 +249,7 @@ namespace BattleshipGame
                     Console.WriteLine("- Use cheat commands and turn the tides in your favor with the cheats command");
                     Console.WriteLine("The game will display the results of each attack, indicating whether you've hit or missed the opponent's ships.");
                     Console.WriteLine("Be strategic and try to outsmart the computer to win the game!");
+                    Console.WriteLine("Try the ADMIN Command for advanced Options");
                     Console.WriteLine("Press Enter to continue...");
                     Console.ReadLine();
                     return;
@@ -264,17 +265,72 @@ namespace BattleshipGame
                     Console.WriteLine("- SABOTAGE: Reveal the location of one of the opponent's ships.");
                     Console.WriteLine("- COIN: Flip a coin to determine the winner.");
                     Console.WriteLine("- SURRENDER: Surrender the game and declare the computer the winner.");
+                    Console.WriteLine("- ADMIN: Advanced Options and Cheat list.");
                     Console.WriteLine("Press Enter to continue...");
                     Console.ReadLine();
                     return;
 
+                case "ADMIN":
+                    Console.WriteLine("Welcome to the admin panel!");
+                    Console.WriteLine("You can start a new game or view all available cheats here.");
+                    Console.WriteLine("1. Start a new game");
+                    Console.WriteLine("2. View all cheats");
+                    Console.WriteLine("Enter your choice (1 or 2):");
+                    string adminChoice = Console.ReadLine();
+                    switch (adminChoice)
+                    {
+                        case "1":
+                            // Start a new game
+                            Console.WriteLine("Starting a new game...");
+                            Initialize(); // Call the Initialize method to start a new game
+                            Play(); // Start the new game
+                            break;
+                        case "2":
+                            // View all cheats
+                            Console.WriteLine("Available cheat commands:");
+                            Console.WriteLine("- HELP: Display instructions on how to play the game.");
+                            Console.WriteLine("- REVEAL: Reveal the opponent's ships.");
+                            Console.WriteLine("- NUKE: Trigger a nuclear strike (use with caution!).");
+                            Console.WriteLine("- MISSILE: Activate the Hyper-Sonic-Missile cheat to attack 3 coordinates at once.");
+                            Console.WriteLine("- SABOTAGE: Reveal the location of one of the opponent's ships.");
+                            Console.WriteLine("- COIN: Flip a coin to determine the winner.");
+                            Console.WriteLine("- SURRENDER: Surrender the game and declare the computer the winner.");
+                            Console.WriteLine("- CHEATS: View all available cheat commands.");
+                            Console.WriteLine("Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+                        default:
+                            Console.WriteLine("Invalid choice. Please enter 1 or 2.");
+                            break;
+                    }
+                    return;
+
+
 
                 default:
-                    if (input.Length == 2 && char.IsLetter(input[0]) && char.IsDigit(input[1]))
+                    if ((input.Length == 2 || input.Length == 3) && char.IsLetter(input[0]) && char.IsDigit(input[input.Length - 1]))
                     {
                         int row = input[0] - 'A';
-                        int col = input[1] - '1';
-                        computerBoard.Attack(row, col); // Apply the attack on the computer's board
+                        int col;
+                        if (input.Length == 3 && input[1] == '1' && input[2] == '0')
+                        {
+                            col = 9; // Convert '10' to column index 9 (for column 10)
+                        }
+                        else
+                        {
+                            col = input[input.Length - 1] - '1'; // Convert digit to column index (0-indexed)
+                        }
+
+                        if (row >= 0 && row < 10 && col >= 0 && col < 10)
+                        {
+                            computerBoard.Attack(row, col); // Apply the attack on the computer's board
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Coordinates must be within the range A1 to J10.");
+                            Console.ReadLine();
+                            PlayerTurn(); // Retry player's turn
+                        }
                     }
                     else
                     {
