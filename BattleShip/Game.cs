@@ -97,17 +97,62 @@ namespace BattleshipGame
                     return;
 
                 case "NUKE":
-                    Console.WriteLine("Are you sure you want to trigger a nuclear strike? This action will destroy all enemy ships! (Y/N)");
+                    Console.WriteLine("Are you sure you want to trigger a nuclear strike? This action may have unforeseen consequences! (Y/N)");
                     string confirm = Console.ReadLine().ToUpper();
                     if (confirm == "Y")
                     {
-                        Console.Clear();
-                        Console.WriteLine("Player triggered a nuclear strike! All enemy ships are destroyed!");
-                        computerBoard.Nuke(); // Destroy all enemy ships
-                        Console.WriteLine("Press Enter to continue...");
-                        Console.ReadLine();
+                        // Determine the outcome based on probabilities
+                        int outcome = random.Next(1, 101); // Generate a random number between 1 and 100
+                        if (outcome <= 22)
+                        {
+                            // Both players' ships are destroyed
+                            Console.Clear();
+                            Console.WriteLine("Nuclear strike initiated! Both players' ships have been destroyed!");
+                            playerBoard.Nuke();
+                            computerBoard.Nuke();
+                            Console.WriteLine("Press Enter to continue...");
+                            Console.ReadLine();
+                        }
+                        else if (outcome <= 27)
+                        {
+                            // Player's ships are destroyed
+                            Console.Clear();
+                            Console.WriteLine("Nuclear strike initiated! Your ships have been destroyed! Computer wins!");
+                            playerBoard.Nuke();
+                            Console.WriteLine("Press Enter to continue...");
+                            Console.ReadLine();
+                        }
+                        else
+                        {
+                            // Only opponent's ships are destroyed
+                            Console.Clear();
+                            Console.WriteLine("Nuclear strike initiated! All enemy ships have been destroyed!");
+                            computerBoard.Nuke();
+                            Console.WriteLine("Press Enter to continue...");
+                            Console.ReadLine();
+                        }
                     }
                     return;
+
+                case "SURRENDER":
+                    Console.WriteLine("Are you sure you want to surrender? The computer will be declared the winner! (Y/N)");
+                    string confirmSurrender = Console.ReadLine().ToUpper();
+                    if (confirmSurrender == "Y")
+                    {
+                        // Computer wins
+                        Console.Clear();
+                        Console.WriteLine("You surrendered! The computer is declared the winner!");
+                        Console.WriteLine("Press Enter to continue...");
+                        Console.ReadLine();
+                        return;
+                    }
+                    else
+                    {
+                        // Player decides not to surrender
+                        Console.WriteLine("Surrender cancelled. Keep fighting!");
+                    }
+                    return;
+
                 case "MISSILE":
                     // Activate Hyper-Sonic-Missile cheat
                     Console.WriteLine("Hyper-Sonic-Missile cheat activated! Select 3 coordinates to attack on the computer's board.");
@@ -130,7 +175,7 @@ namespace BattleshipGame
                     return;
 
                 case "SABOTAGE":
-                    Console.WriteLine("Sabotage activated! Select a coordinate on the opponent's board to reveal the location of one of their ships.");
+                    Console.WriteLine("Sabotage activated! Select a coordinate on the opponent's board to destroy one of their ships. If it exists!");
                     Console.WriteLine("Enter coordinate:");
                     string sabotageInput = Console.ReadLine().ToUpper();
                     if (sabotageInput.Length == 2 && char.IsLetter(sabotageInput[0]) && char.IsDigit(sabotageInput[1]))
@@ -174,6 +219,18 @@ namespace BattleshipGame
                         Console.WriteLine("Invalid coordinate format. Please enter coordinates in the format 'A1'.");
                     }
                     return;
+                case "HELP":
+                    Console.WriteLine("Welcome to Battleship!");
+                    Console.WriteLine("To play the game, you will take turns with the computer to attack each other's ships on a 10x10 grid.");
+                    Console.WriteLine("Your ships are hidden from the opponent, and your objective is to sink all of the opponent's ships before they sink yours.");
+                    Console.WriteLine("During your turn, you can either:");
+                    Console.WriteLine("- Enter coordinates to attack the opponent's grid (e.g., A1)");
+                    Console.WriteLine("- Use cheat commands such as 'REVEAL' to reveal the opponent's ships or 'NUKE' to destroy all of their ships (use with caution!)");
+                    Console.WriteLine("The game will display the results of each attack, indicating whether you've hit or missed the opponent's ships.");
+                    Console.WriteLine("Be strategic and try to outsmart the computer to win the game!");
+                    Console.WriteLine("Press Enter to continue...");
+                    Console.ReadLine();
+                    return;
 
 
 
@@ -182,7 +239,7 @@ namespace BattleshipGame
                     Console.WriteLine("- REVEAL: Reveals the location of all enemy ships.");
                     Console.WriteLine("- NUKE: Triggers a nuclear strike, destroying all enemy ships.");
                     Console.WriteLine("- MISSILE: Activates the Hyper-Sonic-Missile cheat, allowing you to attack 3 coordinates simultaneously.");
-                    Console.WriteLine("- SABOTAGE: Allows you to enter coordinates of a suspected ship, revealing it entirely!");
+                    Console.WriteLine("- SABOTAGE: Allows you to enter coordinates of a suspected ship, Destroying it entirely!");
                     Console.WriteLine("Press Enter to continue...");
                     Console.ReadLine();
                     return;
