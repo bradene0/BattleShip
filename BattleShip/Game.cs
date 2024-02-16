@@ -3,20 +3,25 @@ using System.Collections.Generic;
 
 namespace BattleshipGame
 {
-    class Game
+    public enum DifficultyLevel
+    {
+        Easy,
+        Medium,
+        Hard
+    }
+
+    public class Game
     {
         private Board playerBoard;
         private Board computerBoard;
         private Random random;
 
-        private bool computerInTargetingMode;
-        private List<Tuple<int, int>> computerTargetQueue;
+        private DifficultyLevel difficultyLevel;
 
-        public Game()
+        public Game(DifficultyLevel difficulty)
         {
             random = new Random();
-            computerInTargetingMode = false;
-            computerTargetQueue = new List<Tuple<int, int>>();
+            difficultyLevel = difficulty;
         }
 
         public void Initialize()
@@ -75,7 +80,6 @@ namespace BattleshipGame
             }
         }
 
-
         private void PlayerTurn()
         {
             Console.WriteLine("Enter coordinates to attack (e.g., A1), or type a cheat command:");
@@ -117,59 +121,97 @@ namespace BattleshipGame
             }
         }
 
-
         private void ComputerTurn()
         {
-            if (!computerInTargetingMode)
+            switch (difficultyLevel)
             {
-                // Hunt mode
-                int row = random.Next(0, 10);
-                int col = random.Next(0, 10);
-                while (playerBoard.GetGridValue(row, col) == 'X' || playerBoard.GetGridValue(row, col) == '.')
-                {
-                    row = random.Next(0, 10);
-                    col = random.Next(0, 10);
-                }
-                playerBoard.Attack(row, col);
-                if (playerBoard.GetGridValue(row, col) == 'O')
-                {
-                    computerInTargetingMode = true;
-                    AddNeighborsToQueue(row, col);
-                }
-            }
-            else
-            {
-                // Target mode
-                if (computerTargetQueue.Count == 0)
-                {
-                    computerInTargetingMode = false;
-                    return;
-                }
-
-                Tuple<int, int> target = computerTargetQueue[0];
-                computerTargetQueue.RemoveAt(0);
-                int row = target.Item1;
-                int col = target.Item2;
-                playerBoard.Attack(row, col);
-                if (playerBoard.GetGridValue(row, col) == 'O')
-                {
-                    AddNeighborsToQueue(row, col);
-                }
+                case DifficultyLevel.Easy:
+                    EasyComputerTurn();
+                    break;
+                case DifficultyLevel.Medium:
+                    MediumComputerTurn();
+                    break;
+                case DifficultyLevel.Hard:
+                    HardComputerTurn();
+                    break;
             }
         }
 
-
-        private void AddNeighborsToQueue(int row, int col)
+        private void EasyComputerTurn()
         {
-            if (row > 0 && !playerBoard.HasBeenAttacked(row - 1, col))
-                computerTargetQueue.Add(new Tuple<int, int>(row - 1, col));
-            if (row < 9 && !playerBoard.HasBeenAttacked(row + 1, col))
-                computerTargetQueue.Add(new Tuple<int, int>(row + 1, col));
-            if (col > 0 && !playerBoard.HasBeenAttacked(row, col - 1))
-                computerTargetQueue.Add(new Tuple<int, int>(row, col - 1));
-            if (col < 9 && !playerBoard.HasBeenAttacked(row, col + 1))
-                computerTargetQueue.Add(new Tuple<int, int>(row, col + 1));
+            int row = random.Next(0, 10);
+            int col = random.Next(0, 10);
+            playerBoard.Attack(row, col);
         }
 
+        private void MediumComputerTurn()
+        {
+            // Prioritize attacking adjacent cells after hitting a ship
+            if (playerBoard.LastAttackResult == Board.AttackResult.Hit)
+            {
+                List<Tuple<int, int>> adjacentCells = GetAdjacentCells(playerBoard.LastAttackRow, playerBoard.LastAttackCol);
+                foreach (var cell in adjacentCells)
+                {
+                    int row = cell.Item1;
+                    int col = cell.Item2;
+                    if (!playerBoard.HasBeenAttacked(row, col))
+                    {
+                        playerBoard.Attack(row, col);
+                        return;
+                    }
+                }
+            }
+
+            // If no adjacent cells are available, make a random attack
+            int randRow, randCol;
+            do
+            {
+                randRow = random.Next(0, 10);
+                randCol = random.Next(0, 10);
+            } while (playerBoard.HasBeenAttacked(randRow, randCol));
+
+            playerBoard.Attack(randRow, randCol);
+        }
+
+        private void HardComputerTurn()
+        {
+            // Implement advanced AI behavior for Hard mode
+            // For demonstration purposes, use a basic strategy of attacking every other cell
+            for (int row = 0; row < 10; row += 2)
+            {
+                for (int col = 0; col < 10; col += 2)
+                {
+                    if (!playerBoard.HasBeenAttacked(row, col))
+                    {
+                        playerBoard.Attack(row, col);
+                        return;
+                    }
+                }
+            }
+
+            // If all cells have been attacked, make a random attack
+            int randRow, randCol;
+            do
+            {
+                randRow = random.Next(0, 10);
+                randCol = random.Next(0, 10);
+            } while (playerBoard.HasBeenAttacked(randRow, randCol));
+
+            playerBoard.Attack(randRow, randCol);
+        }
+
+        private List<Tuple<int, int>> GetAdjacentCells(int row, int col)
+        {
+            var adjacentCells = new List<Tuple<int, int>>();
+            if (row > 0)
+                adjacentCells.Add(new Tuple<int, int>(row - 1, col));
+            if (row < 9)
+                adjacentCells.Add(new Tuple<int, int>(row + 1, col));
+            if (col > 0)
+                adjacentCells.Add(new Tuple<int, int>(row, col - 1));
+            if (col < 9)
+                adjacentCells.Add(new Tuple<int, int>(row, col + 1));
+            return adjacentCells;
+        }
     }
 }

@@ -2,11 +2,21 @@
 
 namespace BattleshipGame
 {
-    class Board
+    public class Board
     {
         private char[,] grid;
         private bool[,] hitGrid;
         private int[] shipSizes = { 5, 4, 3, 3, 2 }; // Sizes of ships
+
+        public enum AttackResult
+        {
+            Miss,
+            Hit
+        }
+
+        public AttackResult LastAttackResult { get; private set; }
+        public int LastAttackRow { get; private set; }
+        public int LastAttackCol { get; private set; }
 
         public Board()
         {
@@ -90,16 +100,17 @@ namespace BattleshipGame
             if (grid[row, col] == 'O')
             {
                 grid[row, col] = 'X'; // Mark hit on grid
-                Console.WriteLine("Hit!");
+                LastAttackResult = AttackResult.Hit;
             }
             else
             {
                 grid[row, col] = '.'; // Mark miss on grid
-                Console.WriteLine("Miss!");
+                LastAttackResult = AttackResult.Miss;
             }
             hitGrid[row, col] = true; // Mark this cell as hit
+            LastAttackRow = row;
+            LastAttackCol = col;
         }
-
 
         public bool AllShipsSunk()
         {
@@ -137,6 +148,7 @@ namespace BattleshipGame
         {
             return hitGrid[row, col];
         }
+
         public void RevealShips()
         {
             // Display the board with ships revealed
@@ -162,6 +174,15 @@ namespace BattleshipGame
             Console.WriteLine("Press Enter to continue...");
             Console.ReadLine();
         }
+
+        public void CheatReveal()
+        {
+            // Display the board with ships revealed
+            Console.Clear();
+            Console.WriteLine("Board (with ships revealed):");
+            Display(true); // Display the board with ships revealed
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadLine();
+        }
     }
 }
-
