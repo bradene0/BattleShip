@@ -129,6 +129,64 @@ namespace BattleshipGame
                     }
                     return;
 
+                case "SABOTAGE":
+                    Console.WriteLine("Sabotage activated! Select a coordinate on the opponent's board to reveal the location of one of their ships.");
+                    Console.WriteLine("Enter coordinate:");
+                    string sabotageInput = Console.ReadLine().ToUpper();
+                    if (sabotageInput.Length == 2 && char.IsLetter(sabotageInput[0]) && char.IsDigit(sabotageInput[1]))
+                    {
+                        int row = sabotageInput[0] - 'A';
+                        int col = sabotageInput[1] - '1';
+                        if (computerBoard.GetGridValue(row, col) == 'O')
+                        {
+                            // Ship found at the selected coordinate
+                            Console.WriteLine($"Sabotage successful! Revealing the entire ship.");
+                            // Find the ship that contains the selected coordinate
+                            int shipRow = row, shipCol = col;
+                            while (shipRow >= 0 && computerBoard.GetGridValue(shipRow, col) == 'O')
+                            {
+                                shipRow--;
+                            }
+                            shipRow++;
+                            while (shipRow < 10 && computerBoard.GetGridValue(shipRow, col) == 'O')
+                            {
+                                shipRow++;
+                            }
+                            shipRow--;
+                            // Reveal the entire ship
+                            for (int r = shipRow; r >= 0 && computerBoard.GetGridValue(r, col) == 'O'; r--)
+                            {
+                                computerBoard.Attack(r, col);
+                            }
+                            for (int r = shipRow + 1; r < 10 && computerBoard.GetGridValue(r, col) == 'O'; r++)
+                            {
+                                computerBoard.Attack(r, col);
+                            }
+                        }
+                        else
+                        {
+                            // No ship found at the selected coordinate
+                            Console.WriteLine("No ship found at the selected coordinate.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid coordinate format. Please enter coordinates in the format 'A1'.");
+                    }
+                    return;
+
+
+
+                case "CHEATS":
+                    Console.WriteLine("Possible cheats:");
+                    Console.WriteLine("- REVEAL: Reveals the location of all enemy ships.");
+                    Console.WriteLine("- NUKE: Triggers a nuclear strike, destroying all enemy ships.");
+                    Console.WriteLine("- MISSILE: Activates the Hyper-Sonic-Missile cheat, allowing you to attack 3 coordinates simultaneously.");
+                    Console.WriteLine("- SABOTAGE: Allows you to enter coordinates of a suspected ship, revealing it entirely!");
+                    Console.WriteLine("Press Enter to continue...");
+                    Console.ReadLine();
+                    return;
+
                 default:
                     if (input.Length == 2 && char.IsLetter(input[0]) && char.IsDigit(input[1]))
                     {
