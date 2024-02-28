@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace BattleshipGame
@@ -85,7 +85,7 @@ namespace BattleshipGame
             Console.WriteLine("Enter coordinates to attack (e.g., A1), or type a cheat command:");
 
             string input = Console.ReadLine().ToUpper();
-
+            //todo add more cheats and add to gui
             switch (input)
             {
                 case "REVEAL":
