@@ -1,5 +1,5 @@
-﻿using System;
-
+using System;
+//todo add minigame
 namespace BattleshipGame
 {
     public class Board
